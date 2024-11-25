@@ -50,7 +50,7 @@ public class Main {
                     break;
                 case 5:
                     running = false;
-                    System.out.println("Exiting the system. Goodbye!");
+                    System.out.println("Thank you for the transactions. Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
