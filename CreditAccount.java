@@ -31,7 +31,7 @@ public class CreditAccount {
         if (amount <= 0) {
             System.out.println("Withdrawal amount must be greater than zero.");
             return false;
-        }
+        } 
         if (balance - amount < -creditLimit) {
             System.out.println("Transaction declined! Exceeds credit limit.");
             return false;
