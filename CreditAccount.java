@@ -13,7 +13,7 @@ public class CreditAccount {
         this.accountNumber = accountNumber;
         this.balance = 0.0;
         this.creditLimit = creditLimit;
-        this.interestRate = interestRate; // Annual interest rate in percentage
+        this.interestRate = interestRate;
     }
 
     // Deposit money into the account
