@@ -23,7 +23,7 @@ public class CreditAccount {
             return;
         }
         balance += amount;
-        System.out.println("Deposited (in Rands): " + amount + ". Current balance (in Rands): " + balance);
+        System.out.println("Deposited (in Rands):  " + amount + ". Current balance (in Rands): " + balance);
     }
 
     // Withdraw money from the account
