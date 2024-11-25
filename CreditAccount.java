@@ -43,7 +43,7 @@ public class CreditAccount {
 
     // Apply interest to the account
     public void applyInterest() {
-        if (balance < 0) { // Only apply interest if the account is in debt
+        if (balance < 0) { 
             double interest = (-balance) * (interestRate / 100);
             balance -= interest;
             System.out.println("Interest of (in Rands)" + interest + " applied. Current balance (in Rands): " + balance);
