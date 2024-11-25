@@ -1,5 +1,3 @@
-//import java.util.Scanner;
-
 public class CreditAccount {
     private String accountHolderName;
     private String accountNumber;
