@@ -58,6 +58,6 @@ public class CreditAccount {
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Balance (in Rands): " + balance);
         System.out.println("Credit Limit (in Rands): " + creditLimit);
-        System.out.println("Interest Rate: " + interestRate + "%");
+        System.out.println("Interest Rate: " + interestRate + "%"); 
     }
 }
