@@ -11,7 +11,7 @@ public class CreditAccount {
     public CreditAccount(String accountHolderName, String accountNumber, double creditLimit, double interestRate) {
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
-        this.balance = 0.0; // Start with a zero balance
+        this.balance = 0.0;
         this.creditLimit = creditLimit;
         this.interestRate = interestRate; // Annual interest rate in percentage
     }
