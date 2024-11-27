@@ -8,6 +8,7 @@ public class BankApp extends JFrame {
     private JPanel mainPanel;
     private Map<String, Double> userBalances; // Simulated balance storage
     private String currentUser; // Stores the currently logged-in user
+    public String username;
 
     public BankApp() {
         // Initialize balance storage
@@ -64,15 +65,39 @@ public class BankApp extends JFrame {
         formPanel.add(usernameField, gbc);
     
         // Password
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        formPanel.add(new JLabel("Password:"), gbc);
-    
-        JPasswordField passwordField = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(passwordField, gbc);
+       // Password
+gbc.gridx = 0;
+gbc.gridy = 1;
+gbc.anchor = GridBagConstraints.EAST;
+formPanel.add(new JLabel("Password:"), gbc);
+
+JPasswordField passwordField = new JPasswordField(15);
+gbc.gridx = 1;
+gbc.anchor = GridBagConstraints.WEST;
+
+// Add a panel to hold password field and toggle button
+JPanel passwordPanel = new JPanel(new BorderLayout());
+passwordPanel.add(passwordField, BorderLayout.CENTER);
+
+JButton toggleVisibilityButton = new JButton("\uD83D\uDC41"); // Eye icon
+toggleVisibilityButton.setPreferredSize(new Dimension(40, passwordField.getPreferredSize().height));
+toggleVisibilityButton.setFocusPainted(false);
+toggleVisibilityButton.setBorderPainted(false);
+toggleVisibilityButton.setContentAreaFilled(false);
+
+passwordPanel.add(toggleVisibilityButton, BorderLayout.EAST);
+formPanel.add(passwordPanel, gbc);
+
+// Toggle Password Visibility Action
+toggleVisibilityButton.addActionListener(e -> {
+    if (passwordField.getEchoChar() == '\u2022') { // Check if password is hidden
+        passwordField.setEchoChar((char) 0); // Show password
+        toggleVisibilityButton.setText("\uD83D\uDC41\u200D\uD83D\uDD0D"); // Eye with slash icon
+    } else {
+        passwordField.setEchoChar('\u2022'); // Hide password
+        toggleVisibilityButton.setText("\uD83D\uDC41"); // Eye icon
+    }
+});
     
         // Add vertical spacing
         gbc.gridx = 0;
@@ -128,112 +153,196 @@ public class BankApp extends JFrame {
         return panel;
     }
     
-    
     // Welcome Page
-    private JPanel createWelcomePage() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(180, 220, 240));
-    
-        // Dashboard Panel
-        JPanel dashboardPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        dashboardPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        dashboardPanel.setOpaque(false);
-    
-        // Dashboard Labels
-        dashboardPanel.add(new JLabel("Name:", SwingConstants.RIGHT));
-        JLabel nameLabel = new JLabel("John Doe"); // Replace with dynamic data if needed
-        dashboardPanel.add(nameLabel);
-    
-        dashboardPanel.add(new JLabel("Account Number:", SwingConstants.RIGHT));
-        JLabel accountNumberLabel = new JLabel("123456789"); // Replace with dynamic data if needed
-        dashboardPanel.add(accountNumberLabel);
-    
-        dashboardPanel.add(new JLabel("Account Holder:", SwingConstants.RIGHT));
-        JLabel accountHolderLabel = new JLabel("Standard User"); // Replace with dynamic data if needed
-        dashboardPanel.add(accountHolderLabel);
-    
-        // Title Label
-        JLabel label = new JLabel("Welcome "  , SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        label.setForeground(new Color(50, 100, 150));
-    
-        // Buttons Panel
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        buttonPanel.setOpaque(false);
-    
-        String[] buttons = {"Deposit", "Withdraw", "Transfer", "Check Balance", "Logout"};
-        for (String text : buttons) {
-            JButton button = new JButton(text);
-            button.setFont(new Font("Arial", Font.PLAIN, 14));
-            button.addActionListener(e -> {
-                if (text.equals("Logout")) {
-                    cardLayout.show(mainPanel, "Login");
-                } else {
-                    cardLayout.show(mainPanel, text);
-                }
-            });
-            buttonPanel.add(button);
-        }
+   // Welcome Page
+   // Welcome Page
+private JPanel createWelcomePage() {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBackground(new Color(180, 220, 240));
 
-        // Add components to the panel
-        panel.add(label, BorderLayout.NORTH); // Page title at the top
-        panel.add(dashboardPanel, BorderLayout.CENTER); // Dashboard in the center
-        panel.add(buttonPanel, BorderLayout.SOUTH); // Buttons at the bottom
-    
-        return panel;
+    // Top Panel for Welcome Text and Logout Button
+    JPanel topPanel = new JPanel(new BorderLayout());
+    topPanel.setBackground(new Color(180, 220, 240));
+
+    JLabel welcomeLabel = new JLabel("Welcome, Lundi!", SwingConstants.CENTER);
+    welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    welcomeLabel.setForeground(new Color(50, 100, 150));
+    topPanel.add(welcomeLabel, BorderLayout.CENTER);
+
+    JButton logoutButton = new JButton("Logout");
+    logoutButton.setFont(new Font("Arial", Font.PLAIN, 14));
+    logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "Login"));
+    topPanel.add(logoutButton, BorderLayout.EAST);
+
+    // Dashboard Panel
+    JPanel dashboardPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+    dashboardPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+    dashboardPanel.setOpaque(false);
+
+    // Dashboard Labels
+    dashboardPanel.add(new JLabel("Account Holder:", SwingConstants.LEFT));
+    JLabel nameLabel = new JLabel("Lundi Langa", SwingConstants.LEFT); // Replace with dynamic data if needed
+    dashboardPanel.add(nameLabel);
+
+    dashboardPanel.add(new JLabel("Account Number:", SwingConstants.LEFT));
+    JLabel accountNumberLabel = new JLabel("123456789", SwingConstants.LEFT); // Replace with dynamic data if needed
+    dashboardPanel.add(accountNumberLabel);
+
+    dashboardPanel.add(new JLabel("Account Type:", SwingConstants.LEFT));
+
+    // Add Dropdown for Account Type
+    String[] accountTypes = {"SAVINGS", "CHEQUE"};
+    JComboBox<String> accountTypeDropdown = new JComboBox<>(accountTypes);
+    dashboardPanel.add(accountTypeDropdown);
+
+    // Buttons Panel
+    JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+    buttonPanel.setOpaque(false);
+
+    String[] buttons = {"Deposit", "Withdraw", "Transfer", "Check Balance"};
+    for (String text : buttons) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.PLAIN, 14));
+        button.addActionListener(e -> cardLayout.show(mainPanel, text));
+        buttonPanel.add(button);
     }
+
+    // Add components to the panel
+    panel.add(topPanel, BorderLayout.NORTH); // Welcome text and logout at the top
+    panel.add(dashboardPanel, BorderLayout.CENTER); // Dashboard in the center
+    panel.add(buttonPanel, BorderLayout.SOUTH); // Buttons at the bottom
+
+    return panel;
+}
 
     // Helper Method for Transaction Pages (Deposit / Withdraw)
     private JPanel createTransactionPage(String titleText, String buttonText, String backPage) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(230, 240, 255));
-
-        JLabel label = new JLabel(titleText, SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        label.setForeground(new Color(50, 100, 150));
-
+    
+        // Top Panel with Back Button
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(230, 240, 255));
+        
+        JButton backButton = new JButton("← ");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        backButton.setFocusPainted(false);
+        backButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        backButton.setBackground(new Color(200, 220, 240));
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, backPage));
+        
+        JLabel titleLabel = new JLabel(titleText, SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(new Color(50, 100, 150));
+    
+        topPanel.add(backButton, BorderLayout.WEST);
+        topPanel.add(titleLabel, BorderLayout.CENTER);
+    
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
-
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-
-        // Amount
+    
+        // Display Current Balance
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(new JLabel("Current Balance:"), gbc);
+    
+        JLabel balanceLabel = new JLabel();
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPanel.add(balanceLabel, gbc);
+    
+        // Account Type Selection
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(new JLabel("Account Type:"), gbc);
+    
+        String[] accountTypes = {"SAVINGS", "CHEQUE"};
+        JComboBox<String> accountTypeDropdown = new JComboBox<>(accountTypes);
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPanel.add(accountTypeDropdown, gbc);
+    
+        // Amount to Deposit
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
         formPanel.add(new JLabel("Amount:"), gbc);
-
+    
         JTextField amountField = new JTextField(10);
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(amountField, gbc);
-
+    
+        // Account Number to Deposit To
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(new JLabel("Account Number:"), gbc);
+    
+        JTextField accountNumberField = new JTextField(10);
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPanel.add(accountNumberField, gbc);
+    
         // Action Button
         JButton actionButton = new JButton(buttonText);
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.CENTER;
         formPanel.add(actionButton, gbc);
-
+    
         actionButton.addActionListener(e -> {
             String amountText = amountField.getText();
-            JOptionPane.showMessageDialog(this, buttonText + " Successful: $" + amountText, "Success", JOptionPane.INFORMATION_MESSAGE);
-            cardLayout.show(mainPanel, backPage);
+            String accountNumber = accountNumberField.getText();
+            String accountType = (String) accountTypeDropdown.getSelectedItem();
+    
+            // Validate input and perform deposit logic
+            if (!amountText.isEmpty() && !accountNumber.isEmpty()) {
+                try {
+                    double amount = Double.parseDouble(amountText);
+                    if (amount > 0) {
+                        double currentBalance = userBalances.getOrDefault(currentUser, 0.0);
+                        userBalances.put(currentUser, currentBalance + amount);
+    
+                        JOptionPane.showMessageDialog(this, "Deposit Successful: R" + amount + "\nTo Account: " + accountNumber + " (" + accountType + ")", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        cardLayout.show(mainPanel, backPage);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Amount must be greater than 0!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid amount entered!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
-
-        panel.add(label, BorderLayout.NORTH);
+    
+        // Update balance label dynamically
+        panel.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & e.DISPLAYABILITY_CHANGED) != 0 && panel.isDisplayable()) {
+                Double balance = userBalances.getOrDefault(currentUser, 0.0);
+                balanceLabel.setText("R" + balance);
+            }
+        });
+    
+        panel.add(topPanel, BorderLayout.NORTH);
         panel.add(formPanel, BorderLayout.CENTER);
         return panel;
     }
+    
 
     // Check Balance Page
     private JPanel createBalancePage() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(230, 240, 255));
 
-        JLabel balanceLabel = new JLabel("Your Balance: $", SwingConstants.CENTER);
+        JLabel balanceLabel = new JLabel("Your Balance: R", SwingConstants.CENTER);
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 18));
         balanceLabel.setForeground(new Color(50, 100, 150));
 
@@ -249,7 +358,7 @@ public class BankApp extends JFrame {
         panel.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & e.DISPLAYABILITY_CHANGED) != 0 && panel.isDisplayable()) {
                 Double balance = userBalances.getOrDefault(currentUser, 0.0);
-                balanceLabel.setText("Your Balance: $" + balance);
+                balanceLabel.setText("Your Balance: R" + balance);
             }
         });
 
@@ -312,7 +421,7 @@ public class BankApp extends JFrame {
                     userBalances.put(currentUser, senderBalance - amount);
                     userBalances.put(recipient, userBalances.get(recipient) + amount);
 
-                    JOptionPane.showMessageDialog(this, "Transfer Successful to " + recipient + ": $" + amount, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Transfer Successful to " + recipient + ": R" + amount, "Success", JOptionPane.INFORMATION_MESSAGE);
                     cardLayout.show(mainPanel, "Welcome");
                 } else {
                     JOptionPane.showMessageDialog(this, "Insufficient funds!", "Error", JOptionPane.ERROR_MESSAGE);
