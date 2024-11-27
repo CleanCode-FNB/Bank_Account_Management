@@ -153,7 +153,7 @@ public class BankApp extends JFrame {
         dashboardPanel.add(accountHolderLabel);
     
         // Title Label
-        JLabel label = new JLabel("Welcome " + usernameField.cre , SwingConstants.CENTER);
+        JLabel label = new JLabel("Welcome "  , SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 18));
         label.setForeground(new Color(50, 100, 150));
     
