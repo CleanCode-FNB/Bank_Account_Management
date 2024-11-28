@@ -79,7 +79,7 @@ gbc.anchor = GridBagConstraints.WEST;
 JPanel passwordPanel = new JPanel(new BorderLayout());
 passwordPanel.add(passwordField, BorderLayout.CENTER);
 
-JButton toggleVisibilityButton = new JButton("\uD83D\uDC41"); // Eye icon
+JButton toggleVisibilityButton = new JButton("show"); // Eye icon
 toggleVisibilityButton.setPreferredSize(new Dimension(40, passwordField.getPreferredSize().height));
 toggleVisibilityButton.setFocusPainted(false);
 toggleVisibilityButton.setBorderPainted(false);
@@ -92,7 +92,7 @@ formPanel.add(passwordPanel, gbc);
 toggleVisibilityButton.addActionListener(e -> {
     if (passwordField.getEchoChar() == '\u2022') { // Check if password is hidden
         passwordField.setEchoChar((char) 0); // Show password
-        toggleVisibilityButton.setText("\uD83D\uDC41\u200D\uD83D\uDD0D"); // Eye with slash icon
+        toggleVisibilityButton.setText("show"); // Eye with slash icon
     } else {
         passwordField.setEchoChar('\u2022'); // Hide password
         toggleVisibilityButton.setText("\uD83D\uDC41"); // Eye icon
@@ -369,72 +369,31 @@ private JPanel createWelcomePage() {
     private JPanel createTransferPage() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(230, 240, 255));
-
+    
+        // Top Panel with Back Button
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(230, 240, 255));
+    
+        JButton backButton = new JButton("← ");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        backButton.setFocusPainted(false);
+        backButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        backButton.setBackground(new Color(200, 220, 240));
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Welcome"));
+    
         JLabel titleLabel = new JLabel("Transfer Funds", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(new Color(50, 100, 150));
-
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setOpaque(false);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        // Amount
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        formPanel.add(new JLabel("Amount:"), gbc);
-
-        JTextField amountField = new JTextField(10);
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(amountField, gbc);
-
-        // Recipient
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        formPanel.add(new JLabel("Recipient:"), gbc);
-
-        JTextField recipientField = new JTextField(10);
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        formPanel.add(recipientField, gbc);
-
-        // Action Button
-        JButton transferButton = new JButton("Transfer");
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        formPanel.add(transferButton, gbc);
-
-        transferButton.addActionListener(e -> {
-            String amountText = amountField.getText();
-            String recipient = recipientField.getText();
-
-            // Check transfer logic
-            if (userBalances.containsKey(recipient)) {
-                double amount = Double.parseDouble(amountText);
-                double senderBalance = userBalances.get(currentUser);
-                if (senderBalance >= amount) {
-                    userBalances.put(currentUser, senderBalance - amount);
-                    userBalances.put(recipient, userBalances.get(recipient) + amount);
-
-                    JOptionPane.showMessageDialog(this, "Transfer Successful to " + recipient + ": R" + amount, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    cardLayout.show(mainPanel, "Welcome");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Insufficient funds!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Recipient not found!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        panel.add(titleLabel, BorderLayout.NORTH);
-        panel.add(formPanel, BorderLayout.CENTER);
+    
+        topPanel.add(backButton, BorderLayout.WEST);
+        topPanel.add(titleLabel, BorderLayout.CENTER);
+    
+        panel.add(topPanel, BorderLayout.NORTH);
+        // Add remaining UI components for transfer logic...
+    
         return panel;
     }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
