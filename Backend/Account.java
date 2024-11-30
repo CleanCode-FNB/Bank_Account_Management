@@ -30,18 +30,22 @@ public abstract class Account {
         }
     }
 
-      // method to send money to another account 
-      public boolean sendMoney(Account recipient, double amount) {
-        if (amount > 0 && amount <= balance) {
-            this.balance -= amount;
-            recipient.balance += amount;
-            System.out.println("Successfully sent " + amount + " to " + recipient.getAccountHolderName());
+
+public boolean transfer(Account targetAccount, double amount) {
+    if (this != targetAccount && amount > 0 && amount <= this.balance) {
+        // Withdraw the amount from the source account (current account)
+        boolean success = this.withdraw(amount);
+        if (success) {
+            // Deposit the amount into the target account
+            targetAccount.deposit(amount);
+            System.out.println("Transferred " + amount + " from " + this.accountNumber + " to " + targetAccount.accountNumber);
             return true;
-        } else {
-            System.out.println("Failed to send money. Insufficient balance or invalid amount.");
-            return false;
         }
+    } else {
+        System.out.println("Invalid transfer: Ensure sufficient balance or different target account.");
     }
+    return false;
+}
 
 
 
@@ -51,10 +55,6 @@ public abstract class Account {
 
     public String getAccountHolderName() {
         return accountHolderName;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
     }
 
     public abstract void accountDetails(); 

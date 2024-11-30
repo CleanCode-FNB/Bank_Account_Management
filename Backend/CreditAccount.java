@@ -1,50 +1,75 @@
+import javax.swing.JOptionPane;
+
 public class CreditAccount extends Account {
-    private final double creditLimit;
-    private final double interestRate;
- 
-    // Constructor
+    private final double creditLimit;  // Credit limit
+    private final double interestRate; // Interest rate
+
+    // Updated Constructor
     public CreditAccount(String accountHolderName, String accountNumber, double creditLimit, double interestRate) {
         super(accountHolderName, accountNumber);
-        this.creditLimit = creditLimit;
-        this.interestRate = interestRate;
+        this.creditLimit = creditLimit;  // Initialize credit limit
+        this.interestRate = interestRate;  // Initialize interest rate
     }
- 
+
     // Withdraw money from the account
     @Override
     public boolean withdraw(double amount) {
         if (amount <= 0) {
-            System.out.println("Withdrawal amount must be greater than zero.");
+            JOptionPane.showMessageDialog(null, "Withdrawal amount must be greater than zero.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (balance - amount < -creditLimit) {
-            System.out.println("Transaction declined! Exceeds credit limit.");
+
+        // Check if withdrawal exceeds available credit (balance + credit limit)
+        if (getBalance() - amount < -creditLimit) {
+            JOptionPane.showMessageDialog(null,
+                    "Transaction declined! Insufficient funds. Exceeds credit limit of R" + creditLimit,
+                    "Transaction Declined", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        balance -= amount;
-        System.out.println("Withdrew (in Rands): " + amount + ". Current balance (in Rands): " + balance);
+
+        // Reduce the balance (direct update since it's a credit account)
+        super.balance -= amount;
+
+        JOptionPane.showMessageDialog(null,
+                "Withdrew R" + amount + ". Current balance: R" + getBalance(),
+                "Withdrawal Successful", JOptionPane.INFORMATION_MESSAGE);
         return true;
     }
- 
+
     // Apply interest to the account
     public void applyInterest() {
-        if (balance < 0) {
-            double interest = (-balance) * (interestRate / 100);
-            balance -= interest;
-            System.out.println("Interest of (in Rands) " + interest + " applied. Current balance (in Rands): " + balance);
+        if (getBalance() < 0) {
+            double interest = (-getBalance()) * (interestRate / 100);
+            super.balance -= interest;  // Deduct interest from the balance
+            JOptionPane.showMessageDialog(null,
+                    "Interest of R" + interest + " applied. Current balance: R" + getBalance(),
+                    "Interest Applied", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            System.out.println("No interest applied as the account balance is positive.");
+            JOptionPane.showMessageDialog(null,
+                    "No interest applied as the account balance is positive.",
+                    "Interest Not Applied", JOptionPane.INFORMATION_MESSAGE);
         }
     }
- 
+
     // Display account details
     @Override
     public void accountDetails() {
-        System.out.println("Account Holder: " + accountHolderName);
-        System.out.println("Account Number: " + accountNumber);
-        System.out.println("Balance (in Rands): " + balance);
-        System.out.println("Credit Limit (in Rands): " + creditLimit);
-        System.out.println("Interest Rate: " + interestRate + "%");
+        JOptionPane.showMessageDialog(null,
+                "Account Holder: " + accountHolderName +
+                        "\nAccount Number: " + accountNumber +
+                        "\nBalance: R" + getBalance() +
+                        "\nCredit Limit: R" + creditLimit +
+                        "\nInterest Rate: " + interestRate + "%",
+                "Credit Account Details", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // Getter for credit limit
+    public double getCreditLimit() {
+        return creditLimit;
+    }
+
+    // Getter for interest rate
+    public double getInterestRate() {
+        return interestRate;
     }
 }
- 
- 

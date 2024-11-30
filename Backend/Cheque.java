@@ -3,7 +3,6 @@ public class Cheque extends Account{
         super(accountHolderName,accountNumber);
     }
         // Common methods
-        @Override
         public void deposit(double amount) {
             if (amount > 0) {
                 balance += amount;
@@ -12,7 +11,7 @@ public class Cheque extends Account{
                 System.out.println("Deposit amount must be positive!");
             }
         }
-        @Override
+    
         public boolean withdraw(double amount) {
             if (amount > 0 && amount <= balance) {
                 balance -= amount;
@@ -24,16 +23,32 @@ public class Cheque extends Account{
         }
     
     
-        @Override
+    public boolean transfer(Account targetAccount, double amount) {
+        if (this != targetAccount && amount > 0 && amount <= this.balance) {
+            // Withdraw the amount from the source account (current account)
+            boolean success = this.withdraw(amount);
+            if (success) {
+                // Deposit the amount into the target account
+                targetAccount.deposit(amount);
+                System.out.println("Transferred " + amount + " from " + this.accountNumber + " to " + targetAccount.accountNumber);
+                return true;
+            }
+        } else {
+            System.out.println("Invalid transfer: Ensure sufficient balance or different target account.");
+        }
+        return false;
+    }
+    
+    
+    
         public double getBalance() {
             return balance;
         }
-        @Override
+    
         public String getAccountHolderName() {
             return accountHolderName;
         }
 
-    @Override
     public void accountDetails(){
         System.out.println(accountHolderName);
         System.out.println(accountNumber);
