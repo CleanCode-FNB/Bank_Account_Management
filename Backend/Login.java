@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class Login extends JFrame {
@@ -14,61 +12,71 @@ public class Login extends JFrame {
     public Login() {
         // Setup JFrame
         setTitle("Login");
-        setSize(300, 200);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        // Create UI components
+        // Header Panel
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel headerLabel = new JLabel("Bank Login");
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headerPanel.add(headerLabel);
+        headerPanel.setBackground(new Color(173, 216, 230)); // Light blue background
+        add(headerPanel, BorderLayout.NORTH);
+
+        // Form Panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
+        usernameField = new JTextField(15);
+        passwordField = new JPasswordField(15);
 
-        usernameField = new JTextField(8);
-        passwordField = new JPasswordField(8);
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(usernameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(passwordLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPanel.add(passwordField, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
+
+        // Button Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         loginButton = new JButton("Login");
         viewUsersButton = new JButton("View Users");
 
-        // Set font and size for buttons and labels
-        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        loginButton.setFont(new Font("Arial", Font.PLAIN, 12));
-        viewUsersButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
+        loginButton.setBackground(new Color(60, 179, 113)); // Green button
+        loginButton.setForeground(Color.WHITE);
 
-        // Layout setup
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        viewUsersButton.setFont(new Font("Arial", Font.BOLD, 14));
+        viewUsersButton.setBackground(new Color(70, 130, 180)); // Blue button
+        viewUsersButton.setForeground(Color.WHITE);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(usernameLabel, gbc);
+        buttonPanel.add(loginButton);
+        buttonPanel.add(viewUsersButton);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(usernameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(passwordLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(passwordField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(loginButton, gbc);
-
-        gbc.gridy = 3;
-        add(viewUsersButton, gbc);
-
-        // Login button action
+        // Action Listeners
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
@@ -82,7 +90,6 @@ public class Login extends JFrame {
             }
         });
 
-        // View all users button action
         viewUsersButton.addActionListener(e -> {
             new ViewAllUsers(userList);  // Show all users
             dispose();  // Close the login window

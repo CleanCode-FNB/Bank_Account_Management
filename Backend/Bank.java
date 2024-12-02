@@ -1,93 +1,108 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Bank extends JFrame {
-    private User currentUser;  // Hold the current logged-in user
+    private User currentUser;
     private JTextArea infoArea;
     private JTextField amountField;
     private JLabel userInfoLabel;
 
-    // Reference to user list from User class (default users)
-    private static ArrayList<User> userList = User.loadUserList();  // Load user list from the User class
+    private static ArrayList<User> userList = User.loadUserList();
 
     public Bank(User user) {
-        this.currentUser = user;  // Initialize with the logged-in user
+        this.currentUser = user;
 
         // Setup JFrame
         setTitle("Bank Operations");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(new BorderLayout());
 
-        // UI Components
+        // Header Section
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(70, 130, 180)); // Steel blue
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
+
+        userInfoLabel = new JLabel(getUserInfo());
+        userInfoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        userInfoLabel.setForeground(Color.WHITE);
+        headerPanel.add(userInfoLabel);
+
+        add(headerPanel, BorderLayout.NORTH);
+
+        // Center Section for Controls
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        // Transaction Section
+        JPanel transactionPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        transactionPanel.setBorder(BorderFactory.createTitledBorder("Transactions"));
+
         JLabel amountLabel = new JLabel("Enter Amount:");
+        amountLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         amountField = new JTextField(15);
 
-        // Buttons for different actions
         JButton depositButton = new JButton("Deposit");
         JButton withdrawButton = new JButton("Withdraw");
         JButton transferButton = new JButton("Transfer");
-        JButton viewBalanceButton = new JButton("View Balance");
-        JButton viewHistoryButton = new JButton("View Action History");
-        JButton clearButton = new JButton("Clear");
-        JButton logoutButton = new JButton("Logout");
 
-        infoArea = new JTextArea(5, 30);
-        infoArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(infoArea);
+        transactionPanel.add(amountLabel);
+        transactionPanel.add(amountField);
+        transactionPanel.add(depositButton);
+        transactionPanel.add(withdrawButton);
+        transactionPanel.add(transferButton);
 
-        // Create user info label to display user details at the top
-        userInfoLabel = new JLabel(getUserInfo());
-        userInfoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        userInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
-
-        // Add components to the frame
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(5, 10, 5, 10);
-        gbc.gridwidth = 2; // Makes user info span across two columns
-        add(userInfoLabel, gbc);  // User info at the top
+        centerPanel.add(transactionPanel, gbc);
 
-        gbc.gridwidth = 1;  // Reset grid width for other components
+        // Action Section
+        JPanel actionPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        actionPanel.setBorder(BorderFactory.createTitledBorder("Actions"));
+
+        JButton viewBalanceButton = new JButton("View Balance");
+        JButton viewHistoryButton = new JButton("View Action History");
+
+        actionPanel.add(viewBalanceButton);
+        actionPanel.add(viewHistoryButton);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        centerPanel.add(actionPanel, gbc);
+
+        // Feedback Section
+        JPanel feedbackPanel = new JPanel(new BorderLayout());
+        feedbackPanel.setBorder(BorderFactory.createTitledBorder("Feedback"));
+
+        infoArea = new JTextArea(10, 40);
+        infoArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(infoArea);
+        feedbackPanel.add(scrollPane, BorderLayout.CENTER);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(amountLabel, gbc);
-        gbc.gridx = 1;
-        add(amountField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(depositButton, gbc);
-        gbc.gridx = 1;
-        add(withdrawButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(transferButton, gbc);
-        gbc.gridx = 1;
-        add(viewBalanceButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        add(viewHistoryButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        add(clearButton, gbc);
-        gbc.gridx = 1;
-        add(logoutButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 6;
         gbc.gridwidth = 2;
-        add(scrollPane, gbc);
+        centerPanel.add(feedbackPanel, gbc);
 
-        // Action listeners for buttons
+        add(centerPanel, BorderLayout.CENTER);
+
+        // Footer Section
+        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        footerPanel.setBackground(new Color(240, 240, 240)); // Light gray
+
+        JButton clearButton = new JButton("Clear");
+        JButton logoutButton = new JButton("Logout");
+
+        footerPanel.add(clearButton);
+        footerPanel.add(logoutButton);
+
+        add(footerPanel, BorderLayout.SOUTH);
+
+        // Action Listeners
         depositButton.addActionListener(e -> performDeposit());
         withdrawButton.addActionListener(e -> performWithdraw());
         transferButton.addActionListener(e -> performTransfer());
@@ -100,10 +115,10 @@ public class Bank extends JFrame {
     }
 
     private String getUserInfo() {
-        return "<html><b>Name:</b> " + currentUser.getFirstName() + " " + currentUser.getLastName() + " &nbsp;&nbsp;" +
-               "<b>Account:</b> " + currentUser.getAccountNumber() + " &nbsp;&nbsp;" +
-               "<b>Balance:</b> R" + currentUser.getBalance() + " &nbsp;&nbsp;" +
-               "<b>Type:</b> " + currentUser.getAccountType() + "</html>";
+        return "<html>Welcome, <b>" + currentUser.getFirstName() + " " + currentUser.getLastName() + "</b>!<br>" +
+            "<b>Account:</b> " + currentUser.getAccountNumber() + " &nbsp;&nbsp;" +
+            "<b>Balance:</b> R" + currentUser.getBalance() + " &nbsp;&nbsp;" +
+            "<b>Type:</b> " + currentUser.getAccountType() + "</html>";
     }
 
     private double getAmount() {
@@ -122,8 +137,8 @@ public class Bank extends JFrame {
             currentUser.addAction("Deposited R" + amount);
             infoArea.setText("Deposited R" + amount + " successfully.");
             updateUserInfo();
-            saveData();  // Save after deposit
         }
+        amountField.setText(""); // Clear the text field
     }
 
     private void performWithdraw() {
@@ -134,11 +149,11 @@ public class Bank extends JFrame {
                 currentUser.addAction("Withdrew R" + amount);
                 infoArea.setText("Withdrew R" + amount + " successfully.");
                 updateUserInfo();
-                saveData();  // Save after withdrawal
             } else {
                 infoArea.setText("Insufficient balance.");
             }
         }
+        amountField.setText(""); // Clear the text field
     }
 
     private void performTransfer() {
@@ -152,32 +167,24 @@ public class Bank extends JFrame {
 
         if (amount > 0) {
             if (currentUser.getBalance() >= amount) {
-                // Update current user's balance
                 currentUser.updateBalance(-amount);
                 currentUser.addAction("Transferred R" + amount + " to account " + recipientAccount);
                 infoArea.setText("Transferred R" + amount + " to account " + recipientAccount + " successfully.");
 
-                // Update recipient's balance and action history
                 User recipient = findUserByAccountNumber(recipientAccount);
                 if (recipient != null) {
-                    recipient.updateBalance(amount);  // Add the received amount to the recipient's current balance
+                    recipient.updateBalance(amount);
                     recipient.addAction("Received R" + amount + " from account " + currentUser.getAccountNumber());
-
-                    // Show confirmation message
-                    JOptionPane.showMessageDialog(this,
-                            "Recipient account " + recipient.getAccountNumber() + " has received R" + amount +
-                            " from account " + currentUser.getAccountNumber(),
-                            "Transfer Successful", JOptionPane.INFORMATION_MESSAGE);
-
-                    updateUserInfo();  // Update sender's information
-                    saveData();  // Save after transfer
                 } else {
                     JOptionPane.showMessageDialog(this, "Recipient account not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+
+                updateUserInfo();
             } else {
                 infoArea.setText("Insufficient balance for the transfer.");
             }
         }
+        amountField.setText(""); // Clear the text field
     }
 
     private User findUserByAccountNumber(String accountNumber) {
@@ -202,17 +209,15 @@ public class Bank extends JFrame {
     }
 
     private void logout() {
-        // Save the user data when logging out
-        saveData();  // Save the updated user list
-        new Login();  // Open the login window
-        dispose();    // Close the bank window
+        User.saveUserList(userList);
+        new Login();
+        dispose();
     }
 
     private void updateUserInfo() {
-        userInfoLabel.setText(getUserInfo());  // Update the user info label when the balance changes
-    }
-
-    private void saveData() {
-        User.saveUserList(userList);  // Save the updated user list to the file
+        userInfoLabel.setText(getUserInfo());
     }
 }
+
+
+
