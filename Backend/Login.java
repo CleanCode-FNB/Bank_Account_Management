@@ -62,18 +62,18 @@ public class Login extends JFrame {
         // Button Panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         loginButton = new JButton("Login");
-        viewUsersButton = new JButton("View Users");
+        //viewUsersButton = new JButton("View Users");
 
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
         loginButton.setBackground(new Color(60, 179, 113)); // Green button
         loginButton.setForeground(Color.WHITE);
 
-        viewUsersButton.setFont(new Font("Arial", Font.BOLD, 14));
-        viewUsersButton.setBackground(new Color(70, 130, 180)); // Blue button
-        viewUsersButton.setForeground(Color.WHITE);
+        // viewUsersButton.setFont(new Font("Arial", Font.BOLD, 14));
+        // viewUsersButton.setBackground(new Color(70, 130, 180)); // Blue button
+        // viewUsersButton.setForeground(Color.WHITE);
 
         buttonPanel.add(loginButton);
-        buttonPanel.add(viewUsersButton);
+       // buttonPanel.add(viewUsersButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Action Listeners
@@ -90,10 +90,10 @@ public class Login extends JFrame {
             }
         });
 
-        viewUsersButton.addActionListener(e -> {
-            new ViewAllUsers(userList);  // Show all users
-            dispose();  // Close the login window
-        });
+        // viewUsersButton.addActionListener(e -> {
+        //     new ViewAllUsers(userList);  // Show all users
+        //     dispose();  // Close the login window
+        // });
 
         setVisible(true);
     }
